@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View, ScrollView, Pressable, ActivityIndicator } from "react-native";
+import { Text, StyleSheet, View, ScrollView, ActivityIndicator } from "react-native";
 import StationCell from "../components/StationCell";
+import store from "../store";
+import { addStations } from "../slice/stationsSlice";
 
+const state = store.getState()
 
 const BikeStations = ({navigation, route}) => {
 
     const [stations, setStations] = useState([])
 
     useEffect(() => {
-        console.log(route.params.network.href)
-        fetch(`https://api.citybik.es${route.params.network.href}`, {
-            method: 'GET'
-        }).then((response) => response.json())
-        .then((response) => {
-            if (response.network.stations && response.network.stations.length > 0)
-            setStations(response.network.stations)
-        }).catch((e) => {
-            console.log(e)
-        })
-        console.log(stations.length)
+        console.log(state)
+        if (state.stations[route.params.network.name]) {
+            setStations(state.stations[route.params.network.name])
+        } else {
+            fetch(`https://api.citybik.es${route.params.network.href}`, {
+                method: 'GET'
+            }).then((response) => response.json())
+            .then((response) => {
+                store.dispatch(addStations(response.network))
+                setStations(response.network.stations)
+            }).catch((e) => {
+                console.log(e)
+            })
+        }
     }, [])
 
     return (

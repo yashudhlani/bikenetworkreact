@@ -43,9 +43,9 @@ const BikeStationInfo = ({route}) => {
 
     return (
         <View style={{flexDirection: 'column', flex: 1}}>
-            <View style={{flex: 2}}>
+            <View style={{flex: 3}}>
                 <MapView
-                    style= {{ height: 300, width: '100%' }}
+                    style= {{ height: '100%', width: '100%' }}
                     region={region}
                 >
                     <Marker
